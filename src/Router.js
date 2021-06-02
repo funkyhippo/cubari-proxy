@@ -6,6 +6,7 @@ import History from "./containers/History.js";
 import Saved from "./containers/Saved.js";
 import Settings from "./containers/Settings.js";
 import MangaDetails from "./containers/MangaDetails.js";
+import Reader from "./containers/Reader.js";
 import PageNotFound from "./containers/PageNotFound.js";
 
 export const navigation = {
@@ -48,6 +49,11 @@ export const navigation = {
     href: "/manga/:source/:slug",
     inNav: false,
     component: (app) => <MangaDetails setPath={app.setPath} />,
+  },
+  MangaDetailsReader: {
+    href: "/manga/:source/:slug/:chapterId",
+    inNav: false,
+    component: (app) => <Reader setPath={app.setPath} />,
   },
 };
 

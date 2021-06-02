@@ -1,11 +1,11 @@
 import React, { Fragment, PureComponent } from "react";
+import { Link } from "react-router-dom";
 import Container from "../components/Container";
 import Section from "../components/Section";
 import { withRouter } from "react-router-dom";
 import sourcemap from "../sources/sourcemap";
 import Spinner from "../components/Spinner";
 import Text from "../components/Text";
-import Gallery, { WrappedGalleryOpener } from "../components/Gallery";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { globalHistoryHandler } from "../utils/remotestorage";
@@ -28,9 +28,6 @@ class MangaDetails extends PureComponent {
       chapters: [],
       metaLoaded: false,
       chaptersLoaded: false,
-      galleryShown: false,
-      images: [],
-      chapterId: undefined,
       readChapters: [],
     };
   }
@@ -41,6 +38,8 @@ class MangaDetails extends PureComponent {
     const slug = this.props.match.params.slug;
     const sourceObject = sourcemap[source];
     if (sourceObject) {
+      // TODO this needs to be retrieved every single time we go back, which is bad.
+      // Move the state out of this container, into the main app.
       sourceObject.getMangaDetails(slug).then((mangaDetails) => {
         this.setState({
           coverUrl: mangaDetails.image,
@@ -73,9 +72,6 @@ class MangaDetails extends PureComponent {
     const slug = this.props.match.params.slug;
     return (
       <Fragment>
-        {this.state.galleryShown ? (
-          <Gallery images={this.state.images} group={this.state.chapterId} />
-        ) : undefined}
         <Container>
           {this.state.metaLoaded ? (
             <Fragment>
@@ -97,50 +93,36 @@ class MangaDetails extends PureComponent {
               {this.state.chaptersLoaded ? (
                 <div className="w-full">
                   {this.state.chapters.map((chapter) => (
-                    <WrappedGalleryOpener
-                      loadCallback={async () => {
-                        let images = await sourcemap[source].getChapterDetails(
+                    <Link
+                      to={`/manga/${source}/${slug}/${chapter.id}`}
+                      onClick={() => {
+                        globalHistoryHandler.addChapter(
                           slug,
+                          source,
                           chapter.id
                         );
-                        this.setState(
-                          {
-                            galleryShown: true,
-                            images: images.pages,
-                            chapterId: chapter.id,
-                          },
-                          async () => {
-                            await globalHistoryHandler.addChapter(
-                              slug,
-                              source,
-                              chapter.chapNum
-                            );
-                            this.setState({
-                              readChapters:
-                                (await globalHistoryHandler.getReadChapters(
-                                  slug,
-                                  source
-                                )) || [],
-                            });
-                          }
-                        );
                       }}
-                      key={"chapter-" + chapter.id}
-                      className={classNames(
-                        "mx-0 sm:mx-5 lg:mx-10 block grid grid-cols-12 bg-white dark:bg-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-100 ease-in-out shadow-md cursor-pointer rounded-md p-3 sm:p-5 my-5",
-                        this.state.readChapters.includes(chapter.chapNum)
-                          ? "opacity-40"
-                          : ""
-                      )}
                     >
-                      <div className="col-span-1 font-light text-left">{chapter.chapNum}</div>
-                      <div className="col-span-11 sm:col-span-9 ml-2.5 -sm:ml-2.5 md:-ml-5 lg:-ml-10 font-medium text-left">
-                        {chapter.name ? chapter.name : "No title"}
-                      </div>
-                      <div className="col-span-2 font-light text-right hidden sm:inline-block">
-                        {dayjs(chapter.time).fromNow()}
-                      </div>
-                    </WrappedGalleryOpener>
+                      <span
+                        className={classNames(
+                          "mx-0 sm:mx-5 lg:mx-10 block grid grid-cols-12 bg-white dark:bg-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-100 ease-in-out shadow-md cursor-pointer rounded-md p-3 sm:p-5 my-5",
+                          this.state.readChapters.includes(chapter.id)
+                            ? "opacity-40"
+                            : ""
+                        )}
+                        key={"chapter-" + chapter.id}
+                      >
+                        <div className="col-span-1 font-light text-left">
+                          {chapter.chapNum}
+                        </div>
+                        <div className="col-span-11 sm:col-span-9 ml-2.5 -sm:ml-2.5 md:-ml-5 lg:-ml-10 font-medium text-left">
+                          {chapter.name ? chapter.name : "No title"}
+                        </div>
+                        <div className="col-span-2 font-light text-right hidden sm:inline-block">
+                          {dayjs(chapter.time).fromNow()}
+                        </div>
+                      </span>
+                    </Link>
                   ))}
                 </div>
               ) : (

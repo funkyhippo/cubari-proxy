@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent, useCallback, useState } from "react";
+import React, { PureComponent } from "react";
 import Container from "./Container";
 import LightGallery from "lightgallery/react";
 import "lightgallery/css/lightgallery.css";
@@ -6,8 +6,6 @@ import "lightgallery/css/lg-zoom.css";
 import "lightgallery/css/lg-thumbnail.css";
 import lgZoom from "lightgallery/plugins/zoom";
 import lgThumbnail from "lightgallery/plugins/thumbnail";
-import Spinner from "./Spinner";
-import { Transition } from "@headlessui/react";
 
 class CustomGallery extends PureComponent {
   galleryDirectRef = {};
@@ -32,6 +30,8 @@ class CustomGallery extends PureComponent {
             plugins={[lgZoom, lgThumbnail]}
             thumbnail={false}
             loop={false}
+            closable={false}
+            {...this.props}
           >
             {this.props.images.map((image, index) => (
               <img alt={index} data-src={image} key={image} />
@@ -41,54 +41,6 @@ class CustomGallery extends PureComponent {
       </div>
     );
   }
-}
-
-/**
- * This doesn't have to be a functional component but I wrote
- * it this way originally and I can't be assed to change it
- */
-export function WrappedGalleryOpener(props) {
-  const [loading, setLoading] = useState(false);
-  const { loadCallback } = props;
-
-  const open = useCallback(() => {
-    setLoading(true);
-    loadCallback().then(() => {
-      setLoading(false);
-    });
-  }, [loadCallback]);
-
-  return (
-    <Fragment>
-      {loading ? (
-        <Fragment>
-          <Transition
-            appear={true}
-            show={true}
-            as="div"
-            enter="transition-opacity duration-500"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="transition-opacity duration-500"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            className="fixed z-50 top-0 left-0 h-screen w-screen bg-white dark:bg-black bg-opacity-80"
-          >
-            <div className="relative top-1/3">
-              <Spinner />
-            </div>
-          </Transition>
-          <span className={props.className} onClick={open}>
-            {props.children}
-          </span>
-        </Fragment>
-      ) : (
-        <span className={props.className} onClick={open}>
-          {props.children}
-        </span>
-      )}
-    </Fragment>
-  );
 }
 
 export default CustomGallery;
