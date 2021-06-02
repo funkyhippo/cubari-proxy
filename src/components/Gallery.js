@@ -72,9 +72,9 @@ export function WrappedGalleryOpener(props) {
             leave="transition-opacity duration-500"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
-            className="fixed z-50 top-0 left-0 h-screen w-screen bg-black bg-opacity-80"
+            className="fixed z-50 top-0 left-0 h-screen w-screen bg-white dark:bg-black bg-opacity-80"
           >
-            <div className="relative top-1/3 filter invert">
+            <div className="relative top-1/3">
               <Spinner />
             </div>
           </Transition>
