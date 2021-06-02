@@ -82,7 +82,7 @@ class MangaDetails extends PureComponent {
               <div className="flex flex-col place-items-center sm:flex-row sm:place-items-start gap-x-9 mb-10">
                 <div className="">
                   <div
-                    className="bg-no-repeat bg-cover bg-center bg-gray-300 dark:bg-gray-800 rounded-lg shadow-md w-36 h-56 sm:h-72 sm:w-48 flex-wrap p-1"
+                    className="bg-no-repeat bg-cover bg-center bg-gray-300 dark:bg-gray-800 rounded-lg shadow-md h-72 w-48 flex-wrap p-1"
                     style={{ backgroundImage: `url("${this.state.coverUrl}")` }}
                   ></div>
                 </div>
@@ -128,17 +128,17 @@ class MangaDetails extends PureComponent {
                       }}
                       key={"chapter-" + chapter.id}
                       className={classNames(
-                        "mx-5 block flex flex-row bg-white dark:bg-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-100 ease-in-out shadow-md cursor-pointer rounded-md px-4 py-6 my-5",
+                        "mx-5 block grid grid-cols-12 bg-white dark:bg-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-100 ease-in-out shadow-md cursor-pointer rounded-md p-3 sm:p-5 my-5",
                         this.state.readChapters.includes(chapter.chapNum)
                           ? "opacity-40"
                           : ""
                       )}
                     >
-                      <div className="w-16 font-light">{chapter.chapNum}</div>
-                      <div className="flex-grow font-medium">
+                      <div className="col-span-1 font-light text-left">{chapter.chapNum}</div>
+                      <div className="col-span-11 sm:col-span-9 ml-2.5 -sm:ml-2.5 md:-ml-5 lg:-ml-10 font-medium text-left">
                         {chapter.name ? chapter.name : "No title"}
                       </div>
-                      <div className="font-light">
+                      <div className="col-span-2 font-light text-right hidden sm:inline-block">
                         {dayjs(chapter.time).fromNow()}
                       </div>
                     </WrappedGalleryOpener>
