@@ -8,6 +8,7 @@ import { Guya, GuyaInfo } from "./Guya/Guya";
 import { MangaDex, MangaDexInfo } from "./MangaDex/MangaDex";
 import { MangaLife, MangaLifeInfo } from "./MangaLife/MangaLife";
 import { CatManga, CatMangaInfo } from "./CatManga/CatManga";
+import { HentaiHere, HentaiHereInfo } from "./HentaiHere/HentaiHere";
 import { CubariSourceMixin } from "./CubariSource";
 import cheerio from "cheerio";
 // import { Mangakakalot, MangakakalotInfo } from "./Mangakakalot/Mangakakalot";
@@ -27,6 +28,11 @@ if (hentai) {
     MangaDexInfo,
     (slug) => `https://cubari.moe/read/mangadex/${slug}/`
   ))(cheerio, "contentRating[]=pornographic");
+  sourcemap["HentaiHere"] = new (CubariSourceMixin(
+    HentaiHere,
+    HentaiHereInfo,
+    (slug) => `https://hentaihere.com/m/${slug}`
+  ))(cheerio);
 } else {
   sourcemap["Guya"] = new (CubariSourceMixin(
     Guya,

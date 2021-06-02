@@ -48,7 +48,7 @@ export class Guya extends Source {
     let mangas = [];
     for (let series in result) {
       let seriesDetails = result[series];
-      if (mangaId.includes(seriesDetails["slug"])) {
+      if (mangaId === seriesDetails["slug"]) {
         mangas.push(
           createManga({
             id: seriesDetails["slug"],
