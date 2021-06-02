@@ -5,6 +5,7 @@ import Search from "./containers/Search.js";
 import History from "./containers/History.js";
 import Saved from "./containers/Saved.js";
 import Settings from "./containers/Settings.js";
+import MangaDetails from "./containers/MangaDetails.js";
 import PageNotFound from "./containers/PageNotFound.js";
 
 export const navigation = {
@@ -42,6 +43,11 @@ export const navigation = {
     href: "/settings",
     inNav: true,
     component: (app) => <Settings setPath={app.setPath} />,
+  },
+  MangaDetails: {
+    href: "/manga/:source/:slug",
+    inNav: false,
+    component: (app) => <MangaDetails setPath={app.setPath} />,
   },
 };
 

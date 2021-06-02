@@ -1,4 +1,5 @@
 import React, { Fragment, PureComponent } from "react";
+import { Link } from "react-router-dom";
 import observer from "../utils/observer";
 import { Transition } from "@headlessui/react";
 import { HeartIcon, XIcon } from "@heroicons/react/solid";
@@ -108,24 +109,21 @@ export default class MangaCard extends PureComponent {
   };
 
   addHistoryHandler = (e) => {
-    this.setState(
-      {
-        removing: true,
-      },
-      this.saveToHistory
-    );
+    this.setState({
+      removing: true,
+    });
+    // We want the save to run regardless of the mount state
+    this.saveToHistory();
   };
 
   removeHistoryHandler = (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (!this.state.removing) {
-      this.setState(
-        {
-          removing: true,
-        },
-        this.removeFromHistory
-      );
+      this.setState({
+        removing: true,
+      });
+      this.removeFromHistory();
     }
     return false;
   };
@@ -194,11 +192,12 @@ export default class MangaCard extends PureComponent {
           className="px-1.5 py-2.5 sm:px-3.5 sm:py-5"
           style={{ willChange: "transform" }}
         >
-          <a
+          <Link
             ref={this.ref}
-            href={this.props.mangaUrlizer(this.props.slug)}
-            target="_blank"
-            rel="noopener noreferrer"
+            key={this.props.mangaUrlizer(this.props.slug)}
+            to={`/manga/${this.props.sourceName}/${this.props.slug}`}
+            // target="_blank"
+            // rel="noopener noreferrer"
             className="bg-no-repeat bg-cover bg-center bg-gray-300 dark:bg-gray-800 transform rounded-lg shadow-md scale-100 md:hover:scale-105 w-36 h-56 sm:h-72 sm:w-48 flex flex-row flex-wrap p-1 transition duration-100 ease-in-out"
             data-background-image={`linear-gradient(rgba(0,0,0,0) 60%, rgba(0,0,0,0.75) 90%), url("${this.props.coverUrl}")`}
             onClick={this.addHistoryHandler}
@@ -255,7 +254,7 @@ export default class MangaCard extends PureComponent {
                 </div>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
       </Transition>
     );
