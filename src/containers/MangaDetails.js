@@ -98,7 +98,6 @@ class MangaDetails extends PureComponent {
                 <div className="w-full">
                   {this.state.chapters.map((chapter) => (
                     <WrappedGalleryOpener
-                      group={chapter.id}
                       loadCallback={async () => {
                         let images = await sourcemap[source].getChapterDetails(
                           slug,
@@ -128,7 +127,7 @@ class MangaDetails extends PureComponent {
                       }}
                       key={"chapter-" + chapter.id}
                       className={classNames(
-                        "mx-5 block grid grid-cols-12 bg-white dark:bg-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-100 ease-in-out shadow-md cursor-pointer rounded-md p-3 sm:p-5 my-5",
+                        "mx-0 sm:mx-5 lg:mx-10 block grid grid-cols-12 bg-white dark:bg-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-100 ease-in-out shadow-md cursor-pointer rounded-md p-3 sm:p-5 my-5",
                         this.state.readChapters.includes(chapter.chapNum)
                           ? "opacity-40"
                           : ""
