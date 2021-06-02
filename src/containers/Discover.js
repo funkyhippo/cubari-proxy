@@ -83,11 +83,7 @@ export default class Discover extends PureComponent {
                 onChange={this.setCurrentSource}
               >
                 {this.getSourceNamesAndIcons().map((source) => (
-                  <RadioGroup.Option
-                    as={Fragment}
-                    value={source.name}
-                    key={source.name}
-                  >
+                  <RadioGroup.Option as={Fragment} value={source.name} key={"source-icon-" + source.name}>
                     {({ checked }) => (
                       <button
                         disabled={source.disabled}
