@@ -79,8 +79,8 @@ class MangaDetails extends PureComponent {
         <Container>
           {this.state.metaLoaded ? (
             <Fragment>
-              <div className="flex flex-col place-items-center sm:flex-row sm:place-items-start gap-x-9 mb-10">
-                <div className="">
+              <div className="flex flex-col place-items-center sm:flex-row sm:place-items-start mb-7">
+                <div className="sm:mr-8 mb-3">
                   <div
                     className="bg-no-repeat bg-cover bg-center bg-gray-300 dark:bg-gray-800 rounded-lg shadow-md h-72 w-48 flex-wrap p-1"
                     style={{ backgroundImage: `url("${this.state.coverUrl}")` }}
