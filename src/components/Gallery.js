@@ -7,6 +7,7 @@ import "lightgallery/css/lg-thumbnail.css";
 import lgZoom from "lightgallery/plugins/zoom";
 import lgThumbnail from "lightgallery/plugins/thumbnail";
 import Spinner from "./Spinner";
+import { Transition } from "@headlessui/react";
 
 class CustomGallery extends PureComponent {
   galleryDirectRef = {};
@@ -61,11 +62,22 @@ export function WrappedGalleryOpener(props) {
     <Fragment>
       {loading ? (
         <Fragment>
-          <div className="fixed top-0 left-0 h-screen w-screen bg-black bg-opacity-80">
-            <div className="relative top-1/3">
+          <Transition
+            appear={true}
+            show={true}
+            as="div"
+            enter="transition-opacity duration-500"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity duration-500"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+            className="fixed top-0 left-0 h-screen w-screen bg-black bg-opacity-80"
+          >
+            <div className="relative top-1/3 filter invert">
               <Spinner />
             </div>
-          </div>
+          </Transition>
           <span className={props.className} onClick={open}>
             {props.children}
           </span>
