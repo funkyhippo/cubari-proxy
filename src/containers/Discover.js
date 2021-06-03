@@ -46,7 +46,7 @@ export default class Discover extends PureComponent {
               key={section.id + section.title + "title"}
               text={capitalizeFirstLetters(subText)}
             />
-            <ScrollableCarousel key={section.id + section.title + "-carousel"}>
+            <ScrollableCarousel key={section.id + section.title + "-carousel"} id={section.id + section.title + "-carousel"}>
               {section.items.map((item) => (
                 <MangaCard
                   key={section.id + item.id}

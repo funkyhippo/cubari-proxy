@@ -5,6 +5,8 @@ import Spinner from "./Spinner";
 
 const SCROLL_THRESHOLD = 20;
 const LOAD_BATCH_COUNT = 6;
+// TODO this is a stopgap solution and will not scale.
+const scrollPositionCache = {};
 
 export default class ScrollableCarousel extends PureComponent {
   constructor(props) {
@@ -28,9 +30,16 @@ export default class ScrollableCarousel extends PureComponent {
       if (entry.isIntersecting) {
         this.setState(
           {
-            itemLength: LOAD_BATCH_COUNT,
+            itemLength: scrollPositionCache[this.props.id]
+              ? scrollPositionCache[this.props.id].itemLength
+              : LOAD_BATCH_COUNT,
           },
-          this.scrollPositionHandler
+          () => {
+            this.ref.current.scrollLeft = scrollPositionCache[this.props.id]
+              ? scrollPositionCache[this.props.id].scrollLeft
+              : 0;
+            this.scrollPositionHandler();
+          }
         );
         this.observer.unobserve(entry.target);
         delete this.observer;
@@ -40,10 +49,15 @@ export default class ScrollableCarousel extends PureComponent {
 
   scrollPositionHandler = () => {
     if (this.ref.current) {
-      let fullyLeftScrolled = this.ref.current.scrollLeft < SCROLL_THRESHOLD;
+      let scrollLeft = this.ref.current.scrollLeft;
+      let fullyLeftScrolled = scrollLeft < SCROLL_THRESHOLD;
       let fullyRightScrolled =
-        this.ref.current.scrollLeft + this.ref.current.clientWidth >
+        scrollLeft + this.ref.current.clientWidth >
         this.ref.current.scrollWidth - SCROLL_THRESHOLD;
+      scrollPositionCache[this.props.id] = {
+        scrollLeft: scrollLeft,
+        itemLength: this.state.itemLength,
+      };
       if (
         fullyRightScrolled &&
         this.state.itemLength < this.props.children.length
