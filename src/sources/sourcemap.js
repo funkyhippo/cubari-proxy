@@ -10,6 +10,8 @@ import { MangaLife, MangaLifeInfo } from "./MangaLife/MangaLife";
 import { CatManga, CatMangaInfo } from "./CatManga/CatManga";
 import { HentaiHere, HentaiHereInfo } from "./HentaiHere/HentaiHere";
 import { CubariSourceMixin } from "./CubariSource";
+import { ComicExtra, ComicExtraInfo } from "./ComicExtra/ComicExtra";
+import { Readm, ReadmInfo } from "./Readm/Readm";
 import cheerio from "cheerio";
 // import { Mangakakalot, MangakakalotInfo } from "./Mangakakalot/Mangakakalot";
 
@@ -63,6 +65,16 @@ if (hentai) {
     MangaDex,
     MangaDexInfo,
     (slug) => `https://cubari.moe/read/mangadex/${slug}/`
+  ))(cheerio);
+  sourcemap["ComicExtra"] = new (CubariSourceMixin(
+    ComicExtra,
+    ComicExtraInfo,
+    (slug) => `https://www.comicextra.com/comic/${slug}/`
+  ))(cheerio);
+  sourcemap["Readm"] = new (CubariSourceMixin(
+    Readm,
+    ReadmInfo,
+    (slug) => `https://readm.org/manga/${slug}/`
   ))(cheerio);
 }
 
