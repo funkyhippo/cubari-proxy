@@ -15,6 +15,7 @@ export default class App extends Component {
     super(props);
     this.state = {
       discover: new Set(),
+      discoverSource: undefined,
       searchQuery: "",
       searchResults: new Set(),
       current: undefined,
@@ -25,6 +26,12 @@ export default class App extends Component {
   setPath = (path) => {
     this.setState({
       current: path,
+    });
+  };
+
+  setDiscoverSource = (source) => {
+    this.setState({
+      discoverSource: source,
     });
   };
 

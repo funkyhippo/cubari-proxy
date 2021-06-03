@@ -14,7 +14,12 @@ export const navigation = {
     href: "/",
     inNav: true,
     component: (app) => (
-      <Discover discover={app.state.discover} setPath={app.setPath} />
+      <Discover
+        discover={app.state.discover}
+        discoverSource={app.state.discoverSource}
+        setDiscoverSource={app.setDiscoverSource}
+        setPath={app.setPath}
+      />
     ),
   },
   Search: {

@@ -10,12 +10,11 @@ import { RadioGroup } from "@headlessui/react";
 import { classNames } from "../utils/strings";
 
 export default class Discover extends PureComponent {
-  state = {
-    currentSource: Object.keys(sourcemap)[0],
-  };
-
   componentDidMount = () => {
     this.props.setPath("Discover");
+    if (!this.props.discoverSource) {
+      this.props.setDiscoverSource(Object.keys(sourcemap)[0]);
+    }
   };
 
   getSourceNamesAndIcons() {
@@ -33,12 +32,6 @@ export default class Discover extends PureComponent {
     }
     return response;
   }
-
-  setCurrentSource = (source) => {
-    this.setState({
-      currentSource: source,
-    });
-  };
 
   render() {
     const items = [];
@@ -79,11 +72,15 @@ export default class Discover extends PureComponent {
               <RadioGroup
                 as="div"
                 className="py-2 flex flex-nowrap"
-                value={this.state.currentSource}
-                onChange={this.setCurrentSource}
+                value={this.props.discoverSource}
+                onChange={this.props.setDiscoverSource}
               >
                 {this.getSourceNamesAndIcons().map((source) => (
-                  <RadioGroup.Option as={Fragment} value={source.name} key={"source-icon-" + source.name}>
+                  <RadioGroup.Option
+                    as={Fragment}
+                    value={source.name}
+                    key={"source-icon-" + source.name}
+                  >
                     {({ checked }) => (
                       <button
                         disabled={source.disabled}
@@ -117,7 +114,7 @@ export default class Discover extends PureComponent {
             </ScrollableCarousel>
 
             {items.map((item) =>
-              item.key.includes(this.state.currentSource) ? item : undefined
+              item.key.includes(this.props.discoverSource) ? item : undefined
             )}
           </Fragment>
         ) : (
