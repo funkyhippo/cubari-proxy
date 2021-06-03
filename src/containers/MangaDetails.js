@@ -136,6 +136,7 @@ class MangaDetails extends PureComponent {
                           chapter.id
                         );
                       }}
+                      key={`chapter-${slug}-${chapter.id}`}
                     >
                       <span
                         className={classNames(
