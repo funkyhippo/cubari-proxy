@@ -13,6 +13,12 @@ import { classNames } from "../utils/strings";
 
 dayjs.extend(relativeTime); // TODO move this out
 
+// TODO move the cache up since we _probably_
+// want browsing to fetch new details when we switch
+// between series. For now, we'll cache everything for
+// the proof-of-concept (and to save on CORS-proxy reqs)
+const mangaDetailsCache = {};
+
 class MangaDetails extends PureComponent {
   constructor(props) {
     super(props);
@@ -38,9 +44,7 @@ class MangaDetails extends PureComponent {
     const slug = this.props.match.params.slug;
     const sourceObject = sourcemap[source];
     if (sourceObject) {
-      // TODO this needs to be retrieved every single time we go back, which is bad.
-      // Move the state out of this container, into the main app.
-      sourceObject.getMangaDetails(slug).then((mangaDetails) => {
+      const hydrateMangaDetails = (mangaDetails) => {
         this.setState({
           coverUrl: mangaDetails.image,
           title: mangaDetails.titles[0] || "Unknown Title",
@@ -51,15 +55,45 @@ class MangaDetails extends PureComponent {
           lastUpdate: mangaDetails.lastUpdate,
           metaLoaded: true,
         });
-        sourceObject.getChapters(slug).then((chapterDetails) => {
-          this.setState({
-            chapters: chapterDetails.sort(
-              (first, second) => second.chapNum - first.chapNum
-            ),
-            chaptersLoaded: true,
-          });
+      };
+      const hydrateChapterDetails = (chapterDetails) => {
+        this.setState({
+          chapters: chapterDetails.sort(
+            (first, second) => second.chapNum - first.chapNum
+          ),
+          chaptersLoaded: true,
         });
-      });
+      };
+      if (
+        source in mangaDetailsCache &&
+        slug in mangaDetailsCache[source] &&
+        mangaDetailsCache[source][slug].mangaDetails &&
+        mangaDetailsCache[source][slug].chapterDetails
+      ) {
+        hydrateMangaDetails(mangaDetailsCache[source][slug].mangaDetails);
+        hydrateChapterDetails(mangaDetailsCache[source][slug].chapterDetails);
+      } else {
+        sourceObject.getMangaDetails(slug).then((mangaDetails) => {
+          mangaDetailsCache[source] = {
+            ...mangaDetailsCache[source],
+            [slug]: {
+              ...(mangaDetailsCache[source] || {})[slug],
+              mangaDetails,
+            },
+          };
+          hydrateMangaDetails(mangaDetails);
+        });
+        sourceObject.getChapters(slug).then((chapterDetails) => {
+          mangaDetailsCache[source] = {
+            ...mangaDetailsCache[source],
+            [slug]: {
+              ...(mangaDetailsCache[source] || {})[slug],
+              chapterDetails,
+            },
+          };
+          hydrateChapterDetails(chapterDetails);
+        });
+      }
       this.setState({
         readChapters:
           (await globalHistoryHandler.getReadChapters(slug, source)) || [],

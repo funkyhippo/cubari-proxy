@@ -3,9 +3,7 @@ import Container from "./Container";
 import LightGallery from "lightgallery/react";
 import "lightgallery/css/lightgallery.css";
 import "lightgallery/css/lg-zoom.css";
-import "lightgallery/css/lg-thumbnail.css";
 import lgZoom from "lightgallery/plugins/zoom";
-import lgThumbnail from "lightgallery/plugins/thumbnail";
 
 class CustomGallery extends PureComponent {
   galleryDirectRef = {};
@@ -24,11 +22,12 @@ class CustomGallery extends PureComponent {
           <LightGallery
             onInit={(detail) => {
               this.galleryDirectRef.current = detail.instance;
-              this.galleryDirectRef.current.openGallery(0);
+              this.galleryDirectRef.current.openGallery(
+                this.props.page ? this.props.page : 0
+              );
             }}
             speed={200}
-            plugins={[lgZoom, lgThumbnail]}
-            thumbnail={false}
+            plugins={[lgZoom]}
             loop={false}
             closable={false}
             {...this.props}
